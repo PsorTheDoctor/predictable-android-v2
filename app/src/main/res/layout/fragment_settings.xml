@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <TextView
+        android:id="@+id/cover_settings"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/settings_header"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        android:fontFamily="@font/century_gothic"
+        android:background="@drawable/cover"
+        android:paddingLeft="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Community"
+        android:textSize="20dp"
+        android:padding="8dp"
+        android:fontFamily="@font/century_gothic" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/btn_share"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:text="Share"
+            android:textAllCaps="false"
+            android:background="@drawable/selector_btn_tile" />
+
+        <Button
+            android:id="@+id/btn_donate"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:text="Donate"
+            android:textAllCaps="false"
+            android:background="@drawable/selector_btn_tile" />
+    </TableRow>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Frequently asked questions"
+        android:textSize="20dp"
+        android:padding="8dp"
+        android:fontFamily="@font/century_gothic" />
+
+    <ExpandableListView
+        android:id="@+id/settings_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp" />
+</TableLayout>
