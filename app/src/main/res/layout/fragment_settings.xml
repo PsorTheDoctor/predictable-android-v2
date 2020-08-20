@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="50dp"
     tools:context=".ui.settings.SettingsFragment">
 
     <TextView
@@ -14,7 +15,7 @@
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:fontFamily="@font/century_gothic"
-        android:background="@drawable/cover"
+        android:background="@drawable/cover_dark"
         android:paddingLeft="16dp" />
 
     <TextView

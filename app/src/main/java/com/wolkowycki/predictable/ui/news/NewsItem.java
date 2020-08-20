@@ -3,19 +3,23 @@ package com.wolkowycki.predictable.ui.news;
 public class NewsItem {
     // private String imageUrl;
     private String header;
-    private String author;
+    private String link;
+    private String date;
 
-    public NewsItem(String header, String author) {
+    public NewsItem(String header, String link, String date) {
         // this.imageUrl = imageUrl;
         this.header = header;
-        this.author = author;
+        this.link = link;
+        this.date = date;
     }
 
     public String getHeader() {
         return header;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getLink() {
+        return link;
     }
+
+    public String getDate() { return date; }
 }

@@ -19,6 +19,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,22 +50,28 @@ public class NewsFragment extends Fragment {
     }
 
     private void parseJson() {
-        String url = "";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        String url = "https://raw.githubusercontent.com/PsorTheDoctor/predictable-api/master/temp.json";
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 // TODO!!
-                // try {
-                    String header = "Header #1";
-                    String description = "Lorem Ipsum";
-                    newsList.add(new NewsItem(header, description));
+                try {
+                    JSONArray entries = response.getJSONArray("entries");
 
+                    for (int i = 0; i < entries.length(); i++) {
+                        JSONObject entry = entries.getJSONObject(i);
+                        String header = entry.getString("title");
+                        String link = entry.getString("link");
+                        String date = entry.getString("date");
+
+                        newsList.add(new NewsItem(header, link, date));
+                    }
                     newsAdapter = new NewsAdapter(getContext(), newsList);
                     recyclerView.setAdapter(newsAdapter);
-                // } catch (JSONException e) {
-                //    e.printStackTrace();
-                // }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

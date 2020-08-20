@@ -35,10 +35,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         // String imageUrl = currentItem.getImageUrl();
         String header = currentItem.getHeader();
-        String author = currentItem.getAuthor();
+        String link = currentItem.getLink();
+        String date = currentItem.getDate();
 
         holder.textViewHeader.setText(header);
-        holder.textViewAuthor.setText(author);
+        holder.textViewLink.setText(link);
+        holder.textViewDate.setText(date);
     }
 
     @Override
@@ -49,13 +51,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     public class NewsViewHolder extends RecyclerView.ViewHolder {
         // public ImageView imageView;
         public TextView textViewHeader;
-        public TextView textViewAuthor;
+        public TextView textViewLink;
+        public TextView textViewDate;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textViewHeader = itemView.findViewById(R.id.news_header);
-            this.textViewAuthor = itemView.findViewById(R.id.news_author);
-
+            this.textViewLink = itemView.findViewById(R.id.news_link);
+            this.textViewDate = itemView.findViewById(R.id.news_date);
         }
     }
 }
