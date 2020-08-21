@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements DonationDialog.DonationDialogListener {
 
     public static final int PAYPAL_REQUEST_CODE = 7171;
     public static final String PAYPAL_CLIENT_ID = "Aat7y99mOjfNzsylLZTnySsQ46eJefV_RaNyDCc0OzT2wmUBg5_TDt0gipE4yBJLAOalJ4VE_p55v-39";
@@ -33,7 +32,6 @@ public class SettingsFragment extends Fragment {
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(PAYPAL_CLIENT_ID);
 
-    String amount = "0.01";
     LinearLayout shareBtn;
     LinearLayout donateBtn;
     EditText amountEdit;
@@ -65,7 +63,7 @@ public class SettingsFragment extends Fragment {
         donateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                processDonation();
+                openDialog();
             }
         });
 
@@ -77,8 +75,17 @@ public class SettingsFragment extends Fragment {
         return root;
     }
 
-    public void processDonation() {
-        // amount = amountEdit.getText().toString();
+    public void openDialog() {
+        DonationDialog dialog = new DonationDialog();
+        dialog.show(requireActivity().getSupportFragmentManager(), "Donation dialog");
+    }
+
+    @Override
+    public void applyAmount(String amount) {
+        // processDonation(amount);
+    }
+
+    public void processDonation(String amount) {
         PayPalPayment payment = new PayPalPayment(new BigDecimal(String.valueOf(amount)), "USD",
                 "Help us growing up", PayPalPayment.PAYMENT_INTENT_SALE);
         Intent intent = new Intent(getContext(), PaymentActivity.class);
