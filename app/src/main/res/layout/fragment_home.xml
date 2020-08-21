@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_below="@id/cover"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="0dp">
 
         <ExpandableListView
             android:id="@+id/list_view"

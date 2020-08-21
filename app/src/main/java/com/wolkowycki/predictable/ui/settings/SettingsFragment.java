@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,7 +34,8 @@ public class SettingsFragment extends Fragment {
             .clientId(PAYPAL_CLIENT_ID);
 
     String amount = "0.01";
-    Button donateBtn;
+    LinearLayout shareBtn;
+    LinearLayout donateBtn;
     EditText amountEdit;
 
     private ExpandableListView listView;
@@ -41,12 +43,24 @@ public class SettingsFragment extends Fragment {
     private List<String> listHeader;
     private HashMap<String, List<String>> listHash;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@NonNull final LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        donateBtn = (Button) root.findViewById(R.id.btn_donate);
+        shareBtn = (LinearLayout) root.findViewById(R.id.btn_share);
+        donateBtn = (LinearLayout) root.findViewById(R.id.btn_donate);
         // amountEdit = (EditText) root.findViewById(R.id.amount);
+
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                String content = "Check predictable app: *link to Google Play here*";
+                intent.putExtra(Intent.EXTRA_TEXT, content);
+                intent.setType("text/plain");
+                startActivity(Intent.createChooser(intent, "Share via"));
+            }
+        });
 
         donateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
