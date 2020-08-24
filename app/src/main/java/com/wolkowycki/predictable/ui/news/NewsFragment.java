@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.R;
@@ -50,18 +51,15 @@ public class NewsFragment extends Fragment {
     }
 
     private void parseJson() {
-        String url = "https://raw.githubusercontent.com/PsorTheDoctor/predictable-api/master/temp.json";
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        String url = "https://predictable-api.herokuapp.com/entries-list/1";
+        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject response) {
-                // TODO!!
+            public void onResponse(JSONArray response) {
                 try {
-                    JSONArray entries = response.getJSONArray("entries");
-
-                    for (int i = 0; i < entries.length(); i++) {
-                        JSONObject entry = entries.getJSONObject(i);
-                        String header = entry.getString("title");
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject entry = response.getJSONObject(i);
+                        String header = entry.getString("header");
                         String link = entry.getString("link");
                         String date = entry.getString("date");
 

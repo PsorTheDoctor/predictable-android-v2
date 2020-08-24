@@ -16,7 +16,7 @@
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:fontFamily="@font/century_gothic"
-        android:background="@drawable/cover"
+        android:background="@drawable/gradient_cover"
         android:paddingLeft="16dp" />
 
     <Button
