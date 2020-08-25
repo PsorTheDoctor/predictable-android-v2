@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_header"
-        android:textSize="32sp"
+        android:textSize="44sp"
         android:textColor="#FFFFFF"
         android:textAlignment="center"
         android:fontFamily="@font/century_gothic" />
