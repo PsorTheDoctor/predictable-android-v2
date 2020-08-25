@@ -51,7 +51,7 @@ public class NewsFragment extends Fragment {
     }
 
     private void parseJson() {
-        String url = "https://predictable-api.herokuapp.com/entries-list/1";
+        String url = "https://predictable-api.herokuapp.com/entries-list/10";
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
             @Override

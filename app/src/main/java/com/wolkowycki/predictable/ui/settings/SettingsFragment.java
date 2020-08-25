@@ -56,7 +56,7 @@ public class SettingsFragment extends Fragment implements DonationDialog.Donatio
                 String content = "Check predictable app: *link to Google Play here*";
                 intent.putExtra(Intent.EXTRA_TEXT, content);
                 intent.setType("text/plain");
-                startActivity(Intent.createChooser(intent, "Share via"));
+                startActivity(Intent.createChooser(intent, null));
             }
         });
 
@@ -100,6 +100,7 @@ public class SettingsFragment extends Fragment implements DonationDialog.Donatio
 
         listHeader.add("How does it work?");
         listHeader.add("Can I buy coins directly from you?");
+        listHeader.add("I have an idea for further development, can I contact you?");
 
         List<String> description = new ArrayList<>();
         description.add("We use artificial intelligence methods called deep neural networks to predict future cryptocurrency prices.");
@@ -108,5 +109,9 @@ public class SettingsFragment extends Fragment implements DonationDialog.Donatio
         List<String> answer = new ArrayList<>();
         answer.add("No, we don't sell coins.");
         listHash.put(listHeader.get(1), answer);
+
+        List<String> contact = new ArrayList<>();
+        contact.add("We're open to ideas that may improve our systems. If you have any, be sure you can contact us.");
+        listHash.put(listHeader.get(2), contact);
     }
 }

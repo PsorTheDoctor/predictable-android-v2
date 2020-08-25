@@ -95,4 +95,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contact"
+        android:textSize="20dp"
+        android:padding="8dp"
+        android:fontFamily="@font/century_gothic" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="psor2.0@gmail.com"
+        android:padding="8dp"
+        android:fontFamily="@font/century_gothic" />
 </TableLayout>
