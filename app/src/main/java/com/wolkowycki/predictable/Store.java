@@ -15,7 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Store {
-    private static final String URL = "https://api.coingecko.com/api/v3";
+    private static final String CG = "https://api.coingecko.com/api/v3";
+    private static final String API = "https://predictable-api.herokuapp.com";
     private RequestQueue queue;
 
     public Store(Activity root) {
@@ -24,7 +25,8 @@ public class Store {
 
     // Key is currencyKey
     // It can be a currency, e.g. "bitcoin" to store fresh prices
-    // Or a concatenated currency + date, e.g. "bitcoin01-07-2020" to store past
+    // A concatenated currency + date, e.g. "bitcoin&date=01-07-2020" to store past
+    // Or a concatenated currency + nDaysForward, e.g. "bitcoin&nDaysForward=1" to store predicted
     private void savePrice(Activity root, String currencyKey, float price) {
         SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -32,9 +34,11 @@ public class Store {
         editor.apply();
     }
 
+    // Analogical to above
     // Key is currencyKey
     // It can be a currency, e.g. "bitcoin" to store fresh prices
-    // Or a concatenated currency + date, e.g. "bitcoin01-07-2020" to store past
+    // A concatenated currency + date, e.g. "bitcoin&date=01-07-2020" to store past
+    // Or a concatenated currency + nDaysForward, e.g. "bitcoin&nDaysForward=1" to store predicted
     public float loadPrice(Activity root, String currencyKey) {
         SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
         return prefs.getFloat(currencyKey, 0.0f);
@@ -44,7 +48,7 @@ public class Store {
                               final String currency,
                               final String vsCurrency) {
 
-        String url = URL + "/simple/price?ids=" + currency + "&vs_currencies=" + vsCurrency;
+        String url = CG + "/simple/price?ids=" + currency + "&vs_currencies=" + vsCurrency;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -72,7 +76,7 @@ public class Store {
                              final String vsCurrency,
                              final String date) {
 
-        String url = URL + "/coins/" + currency + "/history?date=" + date;
+        String url = CG + "/coins/" + currency + "/history?date=" + date;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -82,7 +86,33 @@ public class Store {
                             JSONObject marketData = response.getJSONObject("market_data");
                             JSONObject currentPrice = marketData.getJSONObject("current_price");
                             float price = (float) currentPrice.getDouble(vsCurrency);
-                            savePrice(root, currency + date, price);
+                            savePrice(root, currency + "&date=" + date, price);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        queue.add(request);
+    }
+
+    public void fetchFuturePrice(final Activity root,
+                                 final String currency,
+                                 final int nDaysForward) {
+
+        String url = API + "/future-prices/" + currency + "&" + nDaysForward;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            float price = (float) response.getDouble("value");
+                            savePrice(root, currency + "&nDaysForward=" + nDaysForward, price);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
