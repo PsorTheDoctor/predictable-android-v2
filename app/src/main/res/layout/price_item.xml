@@ -13,28 +13,27 @@
         <TextView
             android:id="@+id/day"
             android:textSize="16sp"
-            android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Mon"
+            android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+            android:textAlignment="textStart"
             android:fontFamily="@font/century_gothic" />
 
         <TextView
             android:id="@+id/price"
             android:textSize="16sp"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:textAlignment="textStart"
             android:fontFamily="@font/century_gothic" />
 
         <TextView
             android:id="@+id/change"
             android:textSize="16sp"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="+17.23%"
+            android:textAlignment="textStart"
             android:fontFamily="@font/century_gothic" />
     </TableRow>
 

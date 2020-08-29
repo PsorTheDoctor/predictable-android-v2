@@ -49,7 +49,8 @@ public class HomeFragment extends Fragment {
     private List<Float> listPrices;
     private List<String> listRawDates;
     private List<String> listFormattedDates;
-    private HashMap<String, List<Float>> listHash;
+    private HashMap<String, List<Float>> mapPrices;
+    private HashMap<String, List<Float>> mapChanges;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class HomeFragment extends Fragment {
         listView = (ExpandableListView) root.findViewById(R.id.list_view);
         initData();
         listAdapter = new CurrenciesListAdapter(getContext(),
-                listCurrencies, listPrices, listFormattedDates, listHash);
+                listCurrencies, listPrices, listFormattedDates, mapPrices, mapChanges);
         listView.setAdapter(listAdapter);
 
         return root;
@@ -111,31 +112,35 @@ public class HomeFragment extends Fragment {
         listPrices = new ArrayList<>();
         listRawDates = new ArrayList<>();
         listFormattedDates = new ArrayList<>();
-        listHash = new HashMap<>();
+        mapPrices = new HashMap<>();
+        mapChanges = new HashMap<>();
 
         listCurrencies.addAll(Arrays.asList(CURRENCY_NAMES));
 
+        // Init date shortcuts
         for (int i = -nDaysAgo; i < nDaysForward; i++) {
             listRawDates.add(getDate(i, "dd-MM-yyyy"));
             listFormattedDates.add(getDate(i, "d MMM"));
         }
 
+        // Create a Store object for storing fetched values
         Activity activity = requireActivity();
         Store store = new Store(activity);
 
+        // Init current prices
         for (String currency : CURRENCIES) {
             store.fetchFreshPrice(activity, currency, "usd");
             float freshPrice = store.loadPrice(activity, currency);
             listPrices.add(freshPrice);
         }
 
-        // prices during week
+        // Init prices during week
         for (int i = 0; i < CURRENCIES.length; i++) {
             List<Float> weekPrices = new ArrayList<>();
 
             for (int j = 0; j < nDaysAgo; j++) {
                 String rawDate = listRawDates.get(j);
-                String key = CURRENCIES[i] + rawDate;
+                String key = CURRENCIES[i] + "&date=" + rawDate;
                 store.fetchPastPrice(activity, CURRENCIES[i], "usd", rawDate);
                 float pastPrice = store.loadPrice(activity, key);
                 weekPrices.add(pastPrice);
@@ -143,14 +148,45 @@ public class HomeFragment extends Fragment {
             float freshPrice = store.loadPrice(activity, CURRENCIES[i]);
             weekPrices.add(freshPrice);
 
-            // TODO!! future prices
             for (int j = 4; j < nDaysAgo + nDaysForward; j++) {
-                String key = CURRENCIES[i] + "04-07-2020";
-                store.fetchPastPrice(activity, CURRENCIES[i], "usd", "04-07-2020");
+                int dayForward = j - nDaysAgo;
+                String key = CURRENCIES[i] + "&nDaysForward=" + dayForward;
+                store.fetchFuturePrice(activity, CURRENCIES[i], dayForward);
                 float futurePrice = store.loadPrice(activity, key);
                 weekPrices.add(futurePrice);
             }
-            listHash.put(listCurrencies.get(i), weekPrices);
+            mapPrices.put(listCurrencies.get(i), weekPrices);
+        }
+
+        // Init price changes during week
+        for (int i = 0; i < CURRENCIES.length; i++) {
+            List<Float> weekPrices = mapPrices.get(listCurrencies.get(i));
+            List<Float> weekChanges = new ArrayList<>();
+
+            // get price for 4th day ago
+            // in order to get change between 4th and 3rd in advance
+            String rawDate4thDayAgo = getDate(-4, "dd-MM-yyyy");
+            String key = CURRENCIES[i] + "&date=" + rawDate4thDayAgo;
+            store.fetchPastPrice(activity, CURRENCIES[i], "usd", rawDate4thDayAgo);
+
+            // get price change between 4th and 3rd day ago
+            float price4thDayAgo = store.loadPrice(activity, key);
+            float price3rdDayAgo = weekPrices.get(0);
+
+            float diff4th3rd = price3rdDayAgo - price4thDayAgo;
+            float change4th3rd = (float) Math.round((diff4th3rd / price3rdDayAgo) * 10000) / 100;
+            weekChanges.add(change4th3rd);
+
+            for (int j = 1; j < weekPrices.size(); j++) {
+
+                float prevPrice = weekPrices.get(j - 1);
+                float price = weekPrices.get(j);
+
+                float diff = price - prevPrice;
+                float change = (float) Math.round((diff / price) * 10000) / 100;
+                weekChanges.add(change);
+            }
+            mapChanges.put(listCurrencies.get(i), weekChanges);
         }
     }
 }

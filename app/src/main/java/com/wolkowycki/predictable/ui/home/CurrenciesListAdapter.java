@@ -1,6 +1,7 @@
 package com.wolkowycki.predictable.ui.home;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +27,21 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
     private List<String> listCurrencies;
     private List<Float> listPrices;
     private List<String> listDates;
-    private HashMap<String, List<Float>> listHashMap;
+    private HashMap<String, List<Float>> mapPrices;
+    private HashMap<String, List<Float>> mapChanges;
 
     public CurrenciesListAdapter(Context context,
                                  List<String> listCurrencies,
                                  List<Float> listPrices,
                                  List<String> listDates,
-                                 HashMap<String, List<Float>> listHashMap) {
+                                 HashMap<String, List<Float>> mapPrices,
+                                 HashMap<String, List<Float>> mapChanges) {
         this.context = context;
         this.listCurrencies = listCurrencies;
         this.listPrices = listPrices;
         this.listDates = listDates;
-        this.listHashMap = listHashMap;
+        this.mapPrices = mapPrices;
+        this.mapChanges = mapChanges;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return listHashMap.get(listCurrencies.get(groupPosition)).size();
+        return mapPrices.get(listCurrencies.get(groupPosition)).size();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return listHashMap.get(listCurrencies.get(groupPosition)).get(childPosition);
+        return mapPrices.get(listCurrencies.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -133,13 +137,25 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
         TextView changeView = (TextView) view.findViewById(R.id.change);
 
         String currency = (String) getGroup(groupPosition);
-        List<Float> weekPrices = listHashMap.get(currency);
+        List<Float> weekPrices = mapPrices.get(currency);
+        List<Float> weekChanges = mapChanges.get(currency);
 
         if (!isLastChild) {
             dayView.setText(listDates.get(childPosition));
 
             String price = valueOf(weekPrices.get(childPosition));
             priceView.setText(price);
+
+            float changeValue = weekChanges.get(childPosition);
+            String change = changeValue + " %";
+            if (changeValue < 0) {
+                changeView.setText(change);
+                changeView.setTextColor(Color.RED);
+            } else {
+                change = "+" + change;
+                changeView.setText(change);
+                changeView.setTextColor(Color.parseColor("#009933"));
+            }
 
             LineChart lineChart = (LineChart) view.findViewById(R.id.chart);
             lineChart.setVisibility(View.GONE);
@@ -171,11 +187,11 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
     }
 
     private ArrayList<Entry> chartValues(List<Float> weekPrices) {
-        ArrayList<Entry> dataVals = new ArrayList<Entry>();
+        ArrayList<Entry> values = new ArrayList<Entry>();
 
         for (int i = 0; i < weekPrices.size(); i++) {
-            dataVals.add(new Entry(i, weekPrices.get(i)));
+            values.add(new Entry(i, weekPrices.get(i)));
         }
-        return dataVals;
+        return values;
     }
 }
