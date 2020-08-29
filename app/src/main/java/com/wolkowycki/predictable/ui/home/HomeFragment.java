@@ -1,6 +1,8 @@
 package com.wolkowycki.predictable.ui.home;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -9,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -77,15 +78,20 @@ public class HomeFragment extends Fragment {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Intent browser;
+
                 switch (item.getItemId()) {
                     case R.id.market1:
-                        Toast.makeText(getContext(), "Market 1 clicked", Toast.LENGTH_SHORT).show();
+                        browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.binance.com/en/"));
+                        startActivity(browser);
                         return true;
                     case R.id.market2:
-                        Toast.makeText(getContext(), "Market 2 clicked", Toast.LENGTH_SHORT).show();
+                        browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://crypto.com/exchange/"));
+                        startActivity(browser);
                         return true;
                     case R.id.market3:
-                        Toast.makeText(getContext(), "Market 3 clicked", Toast.LENGTH_SHORT).show();
+                        browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.okex.com/"));
+                        startActivity(browser);
                         return true;
                     default:
                         return false;
