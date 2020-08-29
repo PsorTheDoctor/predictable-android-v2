@@ -12,9 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -151,6 +149,9 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
         List<Float> weekChanges = mapChanges.get(currency);
 
         if (!isLastChild) {
+            // Show last row if hidden
+            priceItem.setVisibility(View.VISIBLE);
+
             // Set date shortcut
             dayView.setText(listDates.get(childPosition));
 
@@ -195,6 +196,9 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
             LineChart chart = (LineChart) view.findViewById(R.id.chart);
             chart.setVisibility(View.GONE);
         } else {
+            // Hide last not-so-meaning price
+            priceItem.setVisibility(View.GONE);
+
             LineChart chart = (LineChart) view.findViewById(R.id.chart);
             chart.setVisibility(View.VISIBLE);
             LineDataSet lineDataSet = new LineDataSet(chartValues(weekPrices), "Price history");
@@ -255,7 +259,7 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
     private ArrayList<Entry> chartValues(List<Float> weekPrices) {
         ArrayList<Entry> values = new ArrayList<Entry>();
 
-        for (int i = 0; i < weekPrices.size(); i++) {
+        for (int i = 0; i < weekPrices.size() - 1; i++) {
             values.add(new Entry(i, weekPrices.get(i)));
         }
         return values;

@@ -148,7 +148,8 @@ public class HomeFragment extends Fragment {
             float freshPrice = store.loadPrice(activity, CURRENCIES[i]);
             weekPrices.add(freshPrice);
 
-            for (int j = 4; j < nDaysAgo + nDaysForward; j++) {
+            // 8 = 3 past days + today + 3 future days + chart placeholder
+            for (int j = 4; j < 8; j++) {
                 int dayForward = j - nDaysAgo;
                 String key = CURRENCIES[i] + "&nDaysForward=" + dayForward;
                 store.fetchFuturePrice(activity, CURRENCIES[i], dayForward);
