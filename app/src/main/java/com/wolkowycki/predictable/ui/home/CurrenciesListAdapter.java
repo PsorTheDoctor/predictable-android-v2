@@ -2,11 +2,13 @@ package com.wolkowycki.predictable.ui.home;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,6 +21,8 @@ import com.wolkowycki.predictable.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.String.valueOf;
 
@@ -132,6 +136,7 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.price_item, null);
         }
 
+        TableRow priceItem = (TableRow) view.findViewById(R.id.price_item);
         TextView dayView = (TextView) view.findViewById(R.id.day);
         TextView priceView = (TextView) view.findViewById(R.id.price);
         TextView changeView = (TextView) view.findViewById(R.id.change);
@@ -141,11 +146,14 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
         List<Float> weekChanges = mapChanges.get(currency);
 
         if (!isLastChild) {
+            // Set date shortcut
             dayView.setText(listDates.get(childPosition));
 
+            // Set price
             String price = valueOf(weekPrices.get(childPosition));
             priceView.setText(price);
 
+            // Set price change
             float changeValue = weekChanges.get(childPosition);
             String change = changeValue + " %";
             if (changeValue < 0) {
@@ -157,6 +165,28 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
                 changeView.setTextColor(Color.parseColor("#009933"));
             }
 
+            // Bold font if date is today's
+            Typeface normal = ResourcesCompat.getFont(context, R.font.century_gothic);
+            Typeface bold = ResourcesCompat.getFont(context, R.font.century_gothic_bold);
+
+            if (childPosition == 3) {
+                dayView.setTypeface(bold);
+                priceView.setTypeface(bold);
+                changeView.setTypeface(bold);
+            } else {
+                dayView.setTypeface(normal);
+                priceView.setTypeface(normal);
+                changeView.setTypeface(normal);
+            }
+
+            // Set tan background for rows with predicted prices
+            if (childPosition > 3) {
+                priceItem.setBackgroundColor(Color.parseColor("#FFFDE7"));
+            } else {
+                priceItem.setBackgroundColor(Color.WHITE);
+            }
+
+            // Hide a chart
             LineChart lineChart = (LineChart) view.findViewById(R.id.chart);
             lineChart.setVisibility(View.GONE);
         } else {
@@ -167,9 +197,10 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
             lineDataSet.setLineWidth(5);
             lineDataSet.setDrawCircles(true);
             lineDataSet.setDrawCircleHole(false);
-
-            lineDataSet.setFillAlpha(200);
+            // lineDataSet.setFillAlpha(200);
             lineDataSet.setDrawFilled(true);
+
+            // lineDataSet.setFillDrawable();
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(lineDataSet);
