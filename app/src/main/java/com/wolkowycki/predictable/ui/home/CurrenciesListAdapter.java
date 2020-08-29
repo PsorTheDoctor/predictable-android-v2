@@ -12,9 +12,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.wolkowycki.predictable.R;
 
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.String.valueOf;
@@ -187,27 +192,57 @@ public class CurrenciesListAdapter extends BaseExpandableListAdapter {
             }
 
             // Hide a chart
-            LineChart lineChart = (LineChart) view.findViewById(R.id.chart);
-            lineChart.setVisibility(View.GONE);
+            LineChart chart = (LineChart) view.findViewById(R.id.chart);
+            chart.setVisibility(View.GONE);
         } else {
-            LineChart lineChart = (LineChart) view.findViewById(R.id.chart);
-            lineChart.setVisibility(View.VISIBLE);
+            LineChart chart = (LineChart) view.findViewById(R.id.chart);
+            chart.setVisibility(View.VISIBLE);
             LineDataSet lineDataSet = new LineDataSet(chartValues(weekPrices), "Price history");
 
+            int[] colors = {
+                    Color.parseColor("#00AAFF"),
+                    Color.parseColor("#1AB2FF"),
+                    Color.parseColor("#33BBFF"),
+                    Color.parseColor("#4DC3FF"),
+                    Color.parseColor("#66CCFF"),
+                    Color.parseColor("#80D4FF"),
+                    Color.parseColor("#99DDFF")
+            };
+
             lineDataSet.setLineWidth(5);
+            lineDataSet.setColors(colors);
+            lineDataSet.setCircleColors(colors);
             lineDataSet.setDrawCircles(true);
             lineDataSet.setDrawCircleHole(false);
             // lineDataSet.setFillAlpha(200);
             lineDataSet.setDrawFilled(true);
+            lineDataSet.setFillDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_chart));
 
-            // lineDataSet.setFillDrawable();
+            // Set date labels
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setValueFormatter(new IndexAxisValueFormatter(listDates));
+            xAxis.setGranularity(1f);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            // Hide grid lines
+            chart.getAxisLeft().setDrawGridLines(false);
+            chart.getAxisRight().setDrawGridLines(false);
+            xAxis.setDrawGridLines(false);
+
+            // Hide a legend
+            chart.setDescription(null);
+            chart.getAxisRight().setDrawLabels(false);
+            chart.getLegend().setEnabled(false);
+
+            // Disable zoom
+            chart.setScaleEnabled(false);
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(lineDataSet);
 
             LineData data = new LineData(dataSets);
-            lineChart.setData(data);
-            lineChart.invalidate();
+            chart.setData(data);
+            chart.invalidate();
         }
         return view;
     }
