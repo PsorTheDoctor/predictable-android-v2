@@ -13,22 +13,29 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/news_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/century_gothic" />
+
+        <TextView
             android:id="@+id/news_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:textSize="20sp"
-            android:fontFamily="@font/century_gothic"
-            android:paddingBottom="8dp" />
+            android:fontFamily="@font/century_gothic" />
 
-        <TextView
+        <Button
             android:id="@+id/news_link"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp" />
-
-        <TextView
-            android:id="@+id/news_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="28dp"
+            android:layout_marginBottom="2dp"
+            android:paddingHorizontal="8dp"
+            android:text="Read more"
+            android:textAllCaps="false"
+            android:background="@drawable/shape_pill"
+            android:fontFamily="@font/century_gothic" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
