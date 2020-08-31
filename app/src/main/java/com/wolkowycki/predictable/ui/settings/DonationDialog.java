@@ -49,7 +49,8 @@ public class DonationDialog extends AppCompatDialogFragment {
         try {
             listener = (DonationDialogListener) context;
         } catch (ClassCastException e) {
-
+            throw new ClassCastException(requireActivity().toString()
+                    + " must implement DonationDialogListener.");
         }
     }
 

@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.wolkowycki.predictable.ui.settings.DonationDialog;
 import com.wolkowycki.predictable.ui.settings.PaymentDetailsActivity;
 
 import org.json.JSONException;
+
+import java.math.BigDecimal;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,19 +24,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DonationDialog.DonationDialogListener {
 
     public static final int PAYPAL_REQUEST_CODE = 7171;
-    public static final String PAYPAL_CLIENT_ID = "Aat7y99mOjfNzsylLZTnySsQ46eJefV_RaNyDCc0OzT2wmUBg5_TDt0gipE4yBJLAOalJ4VE_p55v-39";
+    public static final String PAYPAL_CLIENT_ID = "AavsRvptJE_0R7l0K092UMKG8Tbk6B8wFaUsvfaVUGuzjByJ-ah7kM4kolt9OuxwjiQphUZD8VM1PYaQ";
 
     private static PayPalConfiguration config = new PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION)
             .clientId(PAYPAL_CLIENT_ID);
-
-    String amount = "0.01";
-
-    private RequestQueue queue;
-    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         String details = confirmation.toJSONObject().toString(4);
                         startActivity(new Intent(this, PaymentDetailsActivity.class)
                                 .putExtra("PaymentDetails", details)
-                                .putExtra("PaymentAmount", amount)
+                                // .putExtra("PaymentAmount", amount)
                         );
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -80,5 +78,19 @@ public class MainActivity extends AppCompatActivity {
         } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
             Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void applyAmount(String amount) {
+        processDonation(amount);
+    }
+
+    public void processDonation(String amount) {
+        PayPalPayment payment = new PayPalPayment(new BigDecimal(String.valueOf(amount)), "USD",
+                "Help us growing up", PayPalPayment.PAYMENT_INTENT_SALE);
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
     }
 }
