@@ -2,23 +2,19 @@ package com.wolkowycki.predictable.ui.settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.wolkowycki.predictable.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class PaymentDetailsActivity extends AppCompatActivity {
-
-    TextView txtId, txtAmount, txtStatus;
+    // TextView txtId, txtAmount, txtStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_details);
+    }
+        /* DETAILS WON'T BE DISPLAYED THIS WAY! JUST SHORT INFO
 
         txtId = (TextView) findViewById(R.id.txt_id);
         txtAmount = (TextView) findViewById(R.id.txt_amount);
@@ -43,4 +39,5 @@ public class PaymentDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    */
 }
