@@ -27,8 +27,6 @@ import java.util.ArrayList;
 
 public class NewsFragment extends Fragment {
 
-    private NewsViewModel newsViewModel;
-
     private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
     private ArrayList<NewsItem> newsList;
@@ -36,7 +34,6 @@ public class NewsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_news, container, false);
 
         recyclerView = root.findViewById(R.id.news_view);
