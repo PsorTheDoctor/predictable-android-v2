@@ -26,7 +26,6 @@ public class DonationDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.dialog_donation, null);
 
         builder.setView(view)
-                .setTitle("Enter amount")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
