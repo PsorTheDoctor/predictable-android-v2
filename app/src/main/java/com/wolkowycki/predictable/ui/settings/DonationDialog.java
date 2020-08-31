@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -39,6 +40,7 @@ public class DonationDialog extends AppCompatDialogFragment {
                 });
 
         amountEdit = view.findViewById(R.id.edit_amount);
+        amountEdit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         return builder.create();
     }
 
