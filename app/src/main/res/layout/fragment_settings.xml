@@ -57,7 +57,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btn_donate"
+            android:id="@+id/btn_rate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -69,13 +69,13 @@
                 android:layout_width="120dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:src="@drawable/paypal"
-                android:contentDescription="Donate" />
+                android:src="@drawable/ic_star_half"
+                android:contentDescription="Rate" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="Donate"
+                android:text="Rate"
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:fontFamily="@font/century_gothic" />

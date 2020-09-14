@@ -1,6 +1,8 @@
 package com.wolkowycki.predictable.ui.settings;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,7 @@ import java.util.List;
 public class SettingsFragment extends Fragment {
 
     private LinearLayout shareBtn;
-    private LinearLayout donateBtn;
+    private LinearLayout rateBtn;
 
     private ExpandableListView listView;
     private SettingsListAdapter listAdapter;
@@ -32,23 +34,30 @@ public class SettingsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
         shareBtn = (LinearLayout) root.findViewById(R.id.btn_share);
-        donateBtn = (LinearLayout) root.findViewById(R.id.btn_donate);
+        rateBtn = (LinearLayout) root.findViewById(R.id.btn_rate);
 
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
-                String content = "Check predictable app: *link to Google Play here*";
+                String content = "Check predictable app: https://play.google.com/store/apps/details?id="
+                        + requireActivity().getPackageName();
                 intent.putExtra(Intent.EXTRA_TEXT, content);
                 intent.setType("text/plain");
                 startActivity(Intent.createChooser(intent, null));
             }
         });
 
-        donateBtn.setOnClickListener(new View.OnClickListener() {
+        rateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + requireActivity().getPackageName())));
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=" + requireActivity().getPackageName())));
+                }
             }
         });
 
@@ -58,11 +67,6 @@ public class SettingsFragment extends Fragment {
         listView.setAdapter(listAdapter);
 
         return root;
-    }
-
-    public void openDialog() {
-        DonationDialog dialog = new DonationDialog();
-        dialog.show(requireActivity().getSupportFragmentManager(), "Donation dialog");
     }
 
     private void initData() {
