@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.wallet.BuyFragment">
+
+    <kankan.wheel.widget.WheelView
+        android:id="@+id/wheel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editCurrency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wheel"
+        android:text="Enter a currency or spin a roller!"
+        android:textColor="#4D4D4D"
+        android:fontFamily="@font/century_gothic" />
+
+    <TextView
+        android:id="@+id/qty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editCurrency"
+        android:text="Set a total cost"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:fontFamily="@font/century_gothic_bold" />
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/qty" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/checkout_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekbar"
+        android:layout_margin="8dp"
+        android:elevation="10dp"
+        android:background="@drawable/shadow"
+        android:padding="16dp"
+        app:cardCornerRadius="8dp">
+
+        <TextView
+            android:id="@+id/order_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Order"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:fontFamily="@font/century_gothic" />
+
+        <TextView
+            android:id="@+id/currency_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/order_header"
+            android:fontFamily="@font/century_gothic" />
+
+        <TextView
+            android:id="@+id/cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currency_view"
+            android:fontFamily="@font/century_gothic" />
+
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cost"
+            android:fontFamily="@font/century_gothic" />
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btn_wallet"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/checkout_card"
+        android:layout_centerInParent="true"
+        android:text="Buy virtual coins"
+        android:textAllCaps="false"
+        android:background="@drawable/selector_btn_pill"
+        android:textColor="#FFFFFF" />
+</RelativeLayout>

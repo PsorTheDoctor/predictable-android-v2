@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +27,14 @@ import java.util.ArrayList;
 
 public class NewsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private static final String[] TAGS = {
+            "Forbes", "TechCrunch", "CoinDesk", "Cointelegraph"
+    };
+
+    private RecyclerView tagsRecycler;
+    private TagsAdapter tagsAdapter;
+    private ArrayList<TagItem> tagItems;
+    private RecyclerView newsRecycler;
     private NewsAdapter newsAdapter;
     private ArrayList<NewsItem> newsList;
     private RequestQueue requestQueue;
@@ -36,12 +43,28 @@ public class NewsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
 
-        recyclerView = root.findViewById(R.id.news_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        tagsRecycler = root.findViewById(R.id.tags_view);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                root.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        tagsRecycler.setLayoutManager(layoutManager);
+        tagsRecycler.setItemAnimator(new DefaultItemAnimator());
+
+        tagItems = new ArrayList<>();
+        for (int i = 0; i < TAGS.length; i++) {
+            TagItem item = new TagItem(TAGS[i]);
+            tagItems.add(item);
+        }
+
+        tagsAdapter = new TagsAdapter(root.getContext(), tagItems);
+        tagsRecycler.setAdapter(tagsAdapter);
+
+        newsRecycler = root.findViewById(R.id.news_view);
+        newsRecycler.setHasFixedSize(true);
+        newsRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         newsList = new ArrayList<>();
-        requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue = Volley.newRequestQueue(root.getContext());
         parseJson();
         return root;
     }
@@ -62,7 +85,7 @@ public class NewsFragment extends Fragment {
                         newsList.add(new NewsItem(header, link, date));
                     }
                     newsAdapter = new NewsAdapter(getContext(), newsList);
-                    recyclerView.setAdapter(newsAdapter);
+                    newsRecycler.setAdapter(newsAdapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

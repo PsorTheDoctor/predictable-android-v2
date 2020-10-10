@@ -19,8 +19,14 @@
         android:paddingLeft="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tags_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cover_news" />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/news_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/cover_news"/>
+        android:layout_below="@id/tags_view" />
 </RelativeLayout>

@@ -24,13 +24,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.Px;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.String.valueOf;
 
 public class CurrenciesListAdapter extends BaseExpandableListAdapter {
+
     private Context context;
     private List<String> listCurrencies;
     private List<Float> listPrices;
