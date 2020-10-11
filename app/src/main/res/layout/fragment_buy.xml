@@ -6,78 +6,146 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.wallet.BuyFragment">
 
-    <kankan.wheel.widget.WheelView
-        android:id="@+id/wheel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/editCurrency"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wheel"
-        android:text="Enter a currency or spin a roller!"
-        android:textColor="#4D4D4D"
-        android:fontFamily="@font/century_gothic" />
+        android:layout_marginVertical="8dp"
+        android:background="#EEEEEE"
+        app:cardCornerRadius="8dp">
 
-    <TextView
-        android:id="@+id/qty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editCurrency"
-        android:text="Set a total cost"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        android:fontFamily="@font/century_gothic_bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <SeekBar
-        android:id="@+id/seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/qty" />
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/wheel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/currency_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enter a currency or spin a roller!"
+                android:textColor="#4D4D4D"
+                android:fontFamily="@font/century_gothic" />
+
+            <TextView
+                android:id="@+id/temp_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Set a total cost"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/century_gothic_bold" />
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/checkout_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/seekbar"
+        android:layout_below="@id/card"
         android:layout_margin="8dp"
         android:elevation="10dp"
         android:background="@drawable/shadow"
         android:padding="16dp"
         app:cardCornerRadius="8dp">
 
-        <TextView
-            android:id="@+id/order_header"
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Order"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:fontFamily="@font/century_gothic" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/currency_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/order_header"
-            android:fontFamily="@font/century_gothic" />
+            <TableRow>
+                <TextView
+                    android:id="@+id/order_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Order"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/century_gothic" />
+            </TableRow>
 
-        <TextView
-            android:id="@+id/cost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/currency_view"
-            android:fontFamily="@font/century_gothic" />
+            <TableRow>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Currency"
+                    android:fontFamily="@font/century_gothic_bold" />
 
-        <TextView
-            android:id="@+id/balance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cost"
-            android:fontFamily="@font/century_gothic" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Quantity"
+                    android:fontFamily="@font/century_gothic_bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="In USD"
+                    android:fontFamily="@font/century_gothic_bold" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/currency_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="xxx"
+                    android:fontFamily="@font/century_gothic" />
+
+                <TextView
+                    android:id="@+id/quantity_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="xxx"
+                    android:fontFamily="@font/century_gothic" />
+
+                <TextView
+                    android:id="@+id/cost_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="xxx"
+                    android:fontFamily="@font/century_gothic" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="bbb"
+                    android:fontFamily="@font/century_gothic" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/balance_after_tx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="bbb"
+                    android:fontFamily="@font/century_gothic" />
+            </TableRow>
+        </TableLayout>
     </androidx.cardview.widget.CardView>
 
     <Button

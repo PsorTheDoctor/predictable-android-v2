@@ -13,7 +13,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.wolkowycki.predictable.Constants;
 import com.wolkowycki.predictable.R;
+import com.wolkowycki.predictable.Store;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,23 +29,30 @@ public class BuyFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String KEY = "balance";
 
-    private final static String[] CURRENCIES = {
-            "Bitcoin", "Ethereum", "Ripple", "Tether", "Chainlink",
-            "Bitcoin Cash", "Cardano", "Litecoin", "Bitcoin SV", "EOS",
-            "Binance Coin", "Crypto.com Coin", "Tezos", "Stellar", "TRON",
-            "OKB", "Monero", "Cosmos", "VeChain", "LEO Token"
-    };
-
+    private String currency;
     private float balance;
     private float cost;
-    private TextView balanceView;
-    private TextView costView;
+
     private boolean wheelScrolled = false;
     private EditText currencyEdit;
-    private TextView currencyView;
-    private TextView quantity;
+    private TextView tempCostView;
     private SeekBar seekBar;
+
+    private TextView currencyView;
+    private TextView quantityView;
+    private TextView costView;
+    private TextView balanceView;
+    private TextView balanceAfterTxView;
+
     private Button buyBtn;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     public float getBalance() {
         return balance;
@@ -87,15 +96,23 @@ public class BuyFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_buy, container, false);
 
-        balanceView = (TextView) root.findViewById(R.id.balance);
-        setBalance(loadBalance(requireActivity(), KEY));
-        String balanceTxt = "Balance: " + getBalance() + " $";
-        balanceView.setText(balanceTxt);
+        final Store store = new Store(requireActivity());
 
         initWheel(root);
-        currencyEdit = (EditText) root.findViewById(R.id.editCurrency);
+        currencyEdit = (EditText) root.findViewById(R.id.currency_edit);
+
+        tempCostView = (TextView) root.findViewById(R.id.temp_cost);
+
         currencyView = (TextView) root.findViewById(R.id.currency_view);
-        quantity = (TextView) root.findViewById(R.id.qty);
+        quantityView = (TextView) root.findViewById(R.id.quantity_view);
+        costView = (TextView) root.findViewById(R.id.cost_view);
+
+        balanceView = (TextView) root.findViewById(R.id.balance);
+        setBalance(loadBalance(requireActivity(), KEY));
+        String balanceTxt = "Wallet balance: " + getBalance() + " $";
+        balanceView.setText(balanceTxt);
+
+        balanceAfterTxView = (TextView) root.findViewById(R.id.balance_after_tx);
 
         seekBar = (SeekBar) root.findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -103,62 +120,93 @@ public class BuyFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
                 float tempCost = progress * getBalance() / 100.0f;
                 setCost(tempCost);
-                String tempCostTxt = tempCost + " $";
-                quantity.setText(tempCostTxt);
+
+                String tempCurrency = getCurrency();
+                float pricePerDollar = store.loadPrice(requireActivity(), tempCurrency);
+                float tempQuantity = tempCost / pricePerDollar;
+                String tempCostTxt = tempCost + " $ = " + tempQuantity + " (" + tempCurrency + ")";
+                tempCostView.setText(tempCostTxt);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                String costTxt = getCost() + " $";
+                costView.setText(costTxt);
+
+                float balanceAfterTx = getBalance() - getCost();
+                String balanceAfterTxTxt = "Wallet balance after transaction: " + balanceAfterTx + " $";
+                balanceAfterTxView.setText(balanceAfterTxTxt);
+            }
         });
+
+        currencyView = (TextView) root.findViewById(R.id.currency_view);
 
         buyBtn = (Button) root.findViewById(R.id.btn_wallet);
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float newBalance = getBalance() - getCost();
-                saveBalance(requireActivity(), KEY, newBalance);
+                //float newBalance = getBalance() - getCost();
+                //saveBalance(requireActivity(), KEY, newBalance);
             }
         });
         return root;
     }
 
-    OnWheelScrollListener scrolledListener = new OnWheelScrollListener() {
-        @Override
-        public void onScrollingStarted(WheelView wheel) {
-            wheelScrolled = true;
-        }
-
-        @Override
-        public void onScrollingFinished(WheelView wheel) {
-            wheelScrolled = false;
-            updateStatus();
-        }
-    };
-
-    OnWheelChangedListener changedListener = new OnWheelChangedListener() {
-        @Override
-        public void onChanged(WheelView wheel, int oldValue, int newValue) {
-            if (!wheelScrolled) updateStatus();
-        }
-    };
-
-    private void updateStatus() {
-        currencyEdit.setText(CURRENCIES[((WheelView) requireActivity().findViewById(R.id.wheel))
-                .getCurrentItem()]);
-        currencyView.setText(currencyEdit.getText());
-    }
+//    private void updateStatus() {
+//        String tempCurrency = Constants.CURRENCY_NAMES[(
+//                (WheelView) requireActivity().findViewById(R.id.wheel)).getCurrentItem()];
+//        currencyEdit.setText(tempCurrency);
+//        currencyView.setText(currencyEdit.getText());
+//
+//        // fetch fresh price by every wheel spin
+//        store.fetchFreshPrice(requireActivity(), tempCurrency, "usd");
+//
+//        quantityView.setText(valueOf(store.loadPrice(requireActivity(), tempCurrency)));
+//    }
 
     private void initWheel(View root) {
         WheelView wheel = (WheelView) root.findViewById(R.id.wheel);
-        wheel.setViewAdapter(new ArrayWheelAdapter<String>(root.getContext(), CURRENCIES));
+        wheel.setViewAdapter(new ArrayWheelAdapter<String>(root.getContext(), Constants.CURRENCY_NAMES));
         wheel.setVisibleItems(2);
         wheel.setCurrentItem(0);
         wheel.setCyclic(false);
-        wheel.addChangingListener(changedListener);
-        wheel.addScrollingListener(scrolledListener);
+//        wheel.addChangingListener(changedListener);
+//        wheel.addScrollingListener(scrolledListener);
         wheel.setInterpolator(new AnticipateOvershootInterpolator());
+
+        final Store store = new Store(requireActivity());
+
+        wheel.addScrollingListener(new OnWheelScrollListener() {
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                wheelScrolled = true;
+            }
+
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                wheelScrolled = false;
+                String tempCurrency = Constants.CURRENCIES[(
+                        (WheelView) requireActivity().findViewById(R.id.wheel)).getCurrentItem()];
+                setCurrency(tempCurrency);
+
+                currencyEdit.setText(tempCurrency);
+                currencyView.setText(currencyEdit.getText());
+
+                // fetch fresh price by every wheel spin
+                // store.fetchFreshPrice(requireActivity(), tempCurrency, "usd");
+
+                // quantityView.setText(valueOf(store.loadPrice(requireActivity(), tempCurrency)));
+            }
+        });
+
+        wheel.addChangingListener(new OnWheelChangedListener() {
+            @Override
+            public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                // if (!wheelScrolled) updateStatus();
+            }
+        });
     }
 }

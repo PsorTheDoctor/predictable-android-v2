@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="50dp"
+    android:background="@drawable/gradient_wall_shadow"
     tools:context=".ui.wallet.WalletFragment">
 
     <TextView
@@ -15,7 +16,6 @@
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:fontFamily="@font/century_gothic"
-        android:background="@drawable/gradient_cover"
         android:paddingLeft="16dp" />
 
     <androidx.viewpager.widget.ViewPager
@@ -23,13 +23,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cover_wallet"
-        android:textAllCaps="false"
-        android:fontFamily="@font/century_gothic"
+        android:paddingHorizontal="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_switch_pill"
+            app:tabIndicatorFullWidth="false" />
     </androidx.viewpager.widget.ViewPager>
 </RelativeLayout>
