@@ -13,9 +13,20 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.Constants;
 import com.wolkowycki.predictable.R;
 import com.wolkowycki.predictable.Store;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,9 +40,13 @@ public class BuyFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String KEY = "balance";
 
-    private String currency;
+    private RequestQueue queue;
+
+    private String currency = Constants.CURRENCIES[0];
     private float balance;
-    private float cost;
+    private float quantity = 0.0f;
+    private float cost = 0.0f;
+    private String userId = "123456";
 
     private boolean wheelScrolled = false;
     private EditText currencyEdit;
@@ -70,6 +85,14 @@ public class BuyFragment extends Fragment {
         this.cost = cost;
     }
 
+    public float getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(float quantity) {
+        this.quantity = quantity;
+    }
+
     public static BuyFragment newInstance(int index) {
         BuyFragment fragment = new BuyFragment();
         Bundle bundle = new Bundle();
@@ -97,6 +120,9 @@ public class BuyFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_buy, container, false);
 
         final Store store = new Store(requireActivity());
+        queue = Volley.newRequestQueue(requireActivity());
+
+        userId = "123456"; // UUID.randomUUID().toString();
 
         initWheel(root);
         currencyEdit = (EditText) root.findViewById(R.id.currency_edit);
@@ -124,6 +150,8 @@ public class BuyFragment extends Fragment {
                 String tempCurrency = getCurrency();
                 float pricePerDollar = store.loadPrice(requireActivity(), tempCurrency);
                 float tempQuantity = tempCost / pricePerDollar;
+                setQuantity(tempQuantity);
+
                 String tempCostTxt = tempCost + " $ = " + tempQuantity + " (" + tempCurrency + ")";
                 tempCostView.setText(tempCostTxt);
             }
@@ -148,8 +176,14 @@ public class BuyFragment extends Fragment {
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //float newBalance = getBalance() - getCost();
-                //saveBalance(requireActivity(), KEY, newBalance);
+                // float newBalance = getBalance() - getCost();
+                // saveBalance(requireActivity(), KEY, newBalance);
+                if (currency != null && quantity != 0.0f) {
+                    postOrder();
+                } else {
+                    BuyErrorDialog dialog = new BuyErrorDialog();
+                    dialog.show(requireActivity().getSupportFragmentManager(), "");
+                }
             }
         });
         return root;
@@ -208,5 +242,44 @@ public class BuyFragment extends Fragment {
                 // if (!wheelScrolled) updateStatus();
             }
         });
+    }
+
+    private void postOrder() {
+        String url = Constants.API + "/orders-list/" + userId;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        BuySuccessDialog dialog = new BuySuccessDialog();
+                        dialog.show(requireActivity().getSupportFragmentManager(), "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                BuyErrorDialog dialog = new BuyErrorDialog();
+                dialog.show(requireActivity().getSupportFragmentManager(), "");
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("currency", currency);
+                params.put("amount", Float.toString(quantity));
+                params.put("purchase_price", Float.toString(cost));
+                params.put("owner_id", userId);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+        queue.add(request);
     }
 }

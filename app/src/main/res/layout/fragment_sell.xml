@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.wallet.SellFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orders_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sell fragment is here!" />
+        android:layout_height="match_parent" />
 </RelativeLayout>

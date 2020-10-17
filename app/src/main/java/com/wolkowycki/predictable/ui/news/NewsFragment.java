@@ -37,7 +37,7 @@ public class NewsFragment extends Fragment {
     private RecyclerView newsRecycler;
     private NewsAdapter newsAdapter;
     private ArrayList<NewsItem> newsList;
-    private RequestQueue requestQueue;
+    private RequestQueue queue;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class NewsFragment extends Fragment {
         newsRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         newsList = new ArrayList<>();
-        requestQueue = Volley.newRequestQueue(root.getContext());
+        queue = Volley.newRequestQueue(root.getContext());
         parseJson();
         return root;
     }
@@ -96,6 +96,6 @@ public class NewsFragment extends Fragment {
                 error.printStackTrace();
             }
         });
-        requestQueue.add(request);
+        queue.add(request);
     }
 }

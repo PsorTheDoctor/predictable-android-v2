@@ -2,6 +2,8 @@ package com.wolkowycki.predictable;
 
 public class Constants {
 
+    public static final String API = "https://predictable-api.herokuapp.com";
+
     public static final String[] CURRENCIES = {
             "bitcoin", "ethereum", "ripple", "tether", "chainlink",
             "bitcoin-cash", "cardano", "litecoin", "bitcoin-cash-sv", "eos",
