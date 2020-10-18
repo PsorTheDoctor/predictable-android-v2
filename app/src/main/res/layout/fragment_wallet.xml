@@ -33,4 +33,15 @@
             android:background="@drawable/shape_switch_pill"
             app:tabIndicatorFullWidth="false" />
     </androidx.viewpager.widget.ViewPager>
+
+    <ru.dimorinny.floatingtextbutton.FloatingTextButton
+        android:id="@+id/ftb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:floating_title="100 $"
+        app:floating_background_color="#008577"
+        app:floating_title_color="#FFFFFF" />
 </RelativeLayout>

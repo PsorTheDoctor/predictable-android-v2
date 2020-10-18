@@ -1,6 +1,8 @@
 package com.wolkowycki.predictable.ui.wallet;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.Constants;
 import com.wolkowycki.predictable.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -23,9 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder> {
 
+    private final static int DELAY = 100;
+
     private Context context;
     private ArrayList<OrderItem> ordersList;
     private RequestQueue queue;
+    private MediaPlayer player;
 
     public OrdersAdapter(Context context, ArrayList<OrderItem> ordersList) {
         this.context = context;
@@ -38,6 +44,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
         View v = LayoutInflater.from(context).inflate(R.layout.order_item, parent, false);
 
         queue = Volley.newRequestQueue(v.getContext());
+        player = MediaPlayer.create(v.getContext(), R.raw.coin_drop);
+
         return new OrdersViewHolder(v);
     }
 
@@ -63,8 +71,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
             @Override
             public void onClick(View v) {
                 deleteOrder(currentItem);
-                // instant remove not refreshing api
-                notifyDataSetChanged();
+                // player.start();
+
+                // invoke refresh after delay to update order list
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                }, DELAY);
             }
         });
     }

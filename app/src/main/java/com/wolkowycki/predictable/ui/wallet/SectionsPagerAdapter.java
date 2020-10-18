@@ -29,6 +29,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         if (position == 0) {
             return BuyFragment.newInstance(position);
         } else {
+            notifyDataSetChanged();
             return SellFragment.newInstance(position);
         }
     }
