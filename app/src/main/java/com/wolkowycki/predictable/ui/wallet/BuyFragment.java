@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -49,15 +48,15 @@ public class BuyFragment extends Fragment {
     private String userId = "123456";
 
     private boolean wheelScrolled = false;
-    private EditText currencyEdit;
+    // private EditText currencyEdit;
     private TextView tempCostView;
     private SeekBar seekBar;
 
-    private TextView currencyView;
-    private TextView quantityView;
-    private TextView costView;
-    private TextView balanceView;
-    private TextView balanceAfterTxView;
+//    private TextView currencyView;
+//    private TextView quantityView;
+//    private TextView costView;
+//    private TextView balanceView;
+//    private TextView balanceAfterTxView;
 
     private Button buyBtn;
 
@@ -125,20 +124,20 @@ public class BuyFragment extends Fragment {
         userId = "123456"; // UUID.randomUUID().toString();
 
         initWheel(root);
-        currencyEdit = (EditText) root.findViewById(R.id.currency_edit);
+        // currencyEdit = (EditText) root.findViewById(R.id.currency_edit);
 
         tempCostView = (TextView) root.findViewById(R.id.temp_cost);
 
-        currencyView = (TextView) root.findViewById(R.id.currency_view);
-        quantityView = (TextView) root.findViewById(R.id.quantity_view);
-        costView = (TextView) root.findViewById(R.id.cost_view);
+//        currencyView = (TextView) root.findViewById(R.id.currency_view);
+//        quantityView = (TextView) root.findViewById(R.id.quantity_view);
+//        costView = (TextView) root.findViewById(R.id.cost_view);
 
-        balanceView = (TextView) root.findViewById(R.id.balance);
+//        balanceView = (TextView) root.findViewById(R.id.balance);
         setBalance(loadBalance(requireActivity(), KEY));
         String balanceTxt = "Wallet balance: " + getBalance() + " $";
-        balanceView.setText(balanceTxt);
-
-        balanceAfterTxView = (TextView) root.findViewById(R.id.balance_after_tx);
+//        balanceView.setText(balanceTxt);
+//
+//        balanceAfterTxView = (TextView) root.findViewById(R.id.balance_after_tx);
 
         seekBar = (SeekBar) root.findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -162,15 +161,13 @@ public class BuyFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 String costTxt = getCost() + " $";
-                costView.setText(costTxt);
+                // costView.setText(costTxt);
 
                 float balanceAfterTx = getBalance() - getCost();
                 String balanceAfterTxTxt = "Wallet balance after transaction: " + balanceAfterTx + " $";
-                balanceAfterTxView.setText(balanceAfterTxTxt);
+                // balanceAfterTxView.setText(balanceAfterTxTxt);
             }
         });
-
-        currencyView = (TextView) root.findViewById(R.id.currency_view);
 
         buyBtn = (Button) root.findViewById(R.id.btn_wallet);
         buyBtn.setOnClickListener(new View.OnClickListener() {
@@ -226,8 +223,8 @@ public class BuyFragment extends Fragment {
                         (WheelView) requireActivity().findViewById(R.id.wheel)).getCurrentItem()];
                 setCurrency(tempCurrency);
 
-                currencyEdit.setText(tempCurrency);
-                currencyView.setText(currencyEdit.getText());
+                // currencyEdit.setText(tempCurrency);
+                // currencyView.setText(currencyEdit.getText());
 
                 // fetch fresh price by every wheel spin
                 // store.fetchFreshPrice(requireActivity(), tempCurrency, "usd");
