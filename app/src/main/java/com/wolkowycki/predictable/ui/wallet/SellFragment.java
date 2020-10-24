@@ -11,8 +11,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.wolkowycki.predictable.Constants;
+import com.wolkowycki.predictable.utils.Constants;
 import com.wolkowycki.predictable.R;
+import com.wolkowycki.predictable.utils.LocalStore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,11 +72,11 @@ public class SellFragment extends Fragment {
                                 String currency = order.getString("currency");
                                 float amount = (float) order.getDouble("amount");
                                 float purchasePrice = (float) order.getDouble("purchase_price");
-                                float currentPrice = 1.0f;
+                                float currentPrice = amount * LocalStore.loadPrice(requireActivity(), currency);
 
                                 ordersList.add(new OrderItem(orderId, currency, amount, purchasePrice, currentPrice));
                             }
-                            ordersAdapter = new OrdersAdapter(getContext(), ordersList);
+                            ordersAdapter = new OrdersAdapter(requireActivity(), getContext(), ordersList);
                             ordersRecycler.setAdapter(ordersAdapter);
                         } catch (JSONException e) {
                             e.printStackTrace();

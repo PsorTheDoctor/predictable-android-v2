@@ -1,5 +1,6 @@
 package com.wolkowycki.predictable.ui.wallet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -15,10 +16,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.wolkowycki.predictable.Constants;
+import com.wolkowycki.predictable.utils.Constants;
 import com.wolkowycki.predictable.R;
+import com.wolkowycki.predictable.utils.LocalStore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -28,12 +29,20 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
 
     private final static int DELAY = 100;
 
+    private Activity root;
     private Context context;
     private ArrayList<OrderItem> ordersList;
     private RequestQueue queue;
     private MediaPlayer player;
 
-    public OrdersAdapter(Context context, ArrayList<OrderItem> ordersList) {
+    private OrderItem currentItem;
+    private String currency;
+    private float amount;
+    private float purchasePrice;
+    private float currentPrice;
+
+    public OrdersAdapter(Activity root, Context context, ArrayList<OrderItem> ordersList) {
+        this.root = root;
         this.context = context;
         this.ordersList = ordersList;
     }
@@ -51,13 +60,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
 
     @Override
     public void onBindViewHolder(@NonNull OrdersViewHolder holder, final int position) {
-        final OrderItem currentItem = ordersList.get(position);
+        currentItem = ordersList.get(position);
 
         // final long orderId = currentItem.getOrderId();
-        final String currency = currentItem.getCurrency();
-        final float amount = currentItem.getAmount();
-        final float purchasePrice = currentItem.getPurchasePrice();
-        final float currentPrice = currentItem.getCurrentPrice();
+        currency = currentItem.getCurrency();
+        amount = currentItem.getAmount();
+        purchasePrice = currentItem.getPurchasePrice();
+        currentPrice = currentItem.getCurrentPrice();
 
         String purchasePriceTxt = "Purchase price: " + purchasePrice + " $";
         String currentPriceTxt = "Current price: " + currentPrice + " $";
@@ -70,7 +79,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
         holder.btnSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteOrder(currentItem);
+                deleteOrder(root, currentItem);
                 // player.start();
 
                 // invoke refresh after delay to update order list
@@ -107,13 +116,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
         }
     }
 
-    private void deleteOrder(final OrderItem item) {
+    private void deleteOrder(final Activity root, final OrderItem item) {
         String url = Constants.API + "/orders/" + item.getOrderId();
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        float balance = LocalStore.loadBalance(root, "balance");
+                        float newBalance = balance + item.getCurrentPrice();
+                        LocalStore.saveBalance(root, "balance", newBalance);
                         ordersList.remove(item);
                     }
                 }, new Response.ErrorListener() {

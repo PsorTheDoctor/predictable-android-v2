@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="50dp"
     android:background="@drawable/gradient_wall_shadow"
     tools:context=".ui.wallet.WalletFragment">
 
-    <TextView
-        android:id="@+id/cover_wallet"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/wallet_header"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        android:fontFamily="@font/century_gothic"
-        android:paddingLeft="16dp" />
+        android:layout_height="match_parent">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cover_wallet"
-        android:paddingHorizontal="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <TextView
+            android:id="@+id/cover_wallet"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/wallet_header"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:fontFamily="@font/century_gothic"
+            android:paddingLeft="16dp" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_switch_pill"
-            app:tabIndicatorFullWidth="false" />
-    </androidx.viewpager.widget.ViewPager>
+            android:layout_below="@id/cover_wallet"
+            android:paddingHorizontal="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ru.dimorinny.floatingtextbutton.FloatingTextButton
-        android:id="@+id/ftb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        app:floating_title="100 $"
-        app:floating_background_color="#008577"
-        app:floating_title_color="#FFFFFF" />
-</RelativeLayout>
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_switch_pill"
+                app:tabIndicatorFullWidth="false" />
+        </androidx.viewpager.widget.ViewPager>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_wallet" />
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

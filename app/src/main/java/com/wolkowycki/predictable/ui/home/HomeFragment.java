@@ -15,9 +15,10 @@ import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.wolkowycki.predictable.Constants;
+import com.wolkowycki.predictable.utils.Constants;
 import com.wolkowycki.predictable.R;
-import com.wolkowycki.predictable.Store;
+import com.wolkowycki.predictable.utils.LocalStore;
+import com.wolkowycki.predictable.utils.Store;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -123,7 +124,7 @@ public class HomeFragment extends Fragment {
         // Init current prices
         for (String currency : Constants.CURRENCIES) {
             store.fetchFreshPrice(activity, currency, "usd");
-            float freshPrice = store.loadPrice(activity, currency);
+            float freshPrice = LocalStore.loadPrice(activity, currency);
             listPrices.add(freshPrice);
         }
 
@@ -135,10 +136,10 @@ public class HomeFragment extends Fragment {
                 String rawDate = listRawDates.get(j);
                 String key = Constants.CURRENCIES[i] + "&date=" + rawDate;
                 store.fetchPastPrice(activity, Constants.CURRENCIES[i], "usd", rawDate);
-                float pastPrice = store.loadPrice(activity, key);
+                float pastPrice = LocalStore.loadPrice(activity, key);
                 weekPrices.add(pastPrice);
             }
-            float freshPrice = store.loadPrice(activity, Constants.CURRENCIES[i]);
+            float freshPrice = LocalStore.loadPrice(activity, Constants.CURRENCIES[i]);
             weekPrices.add(freshPrice);
 
             // 8 = 3 past days + today + 3 future days + chart placeholder
@@ -146,7 +147,7 @@ public class HomeFragment extends Fragment {
                 int dayForward = j - nDaysAgo;
                 String key = Constants.CURRENCIES[i] + "&nDaysForward=" + dayForward;
                 store.fetchFuturePrice(activity, Constants.CURRENCIES[i], dayForward);
-                float futurePrice = store.loadPrice(activity, key);
+                float futurePrice = LocalStore.loadPrice(activity, key);
                 weekPrices.add(futurePrice);
             }
             mapPrices.put(listCurrencies.get(i), weekPrices);
@@ -164,7 +165,7 @@ public class HomeFragment extends Fragment {
             store.fetchPastPrice(activity, Constants.CURRENCIES[i], "usd", rawDate4thDayAgo);
 
             // get price change between 4th and 3rd day ago
-            float price4thDayAgo = store.loadPrice(activity, key);
+            float price4thDayAgo = LocalStore.loadPrice(activity, key);
             float price3rdDayAgo = weekPrices.get(0);
 
             float diff4th3rd = price3rdDayAgo - price4thDayAgo;

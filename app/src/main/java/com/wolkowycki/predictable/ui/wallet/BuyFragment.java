@@ -1,8 +1,5 @@
 package com.wolkowycki.predictable.ui.wallet;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +16,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.wolkowycki.predictable.Constants;
+import com.wolkowycki.predictable.utils.Constants;
+import com.wolkowycki.predictable.utils.LocalStore;
 import com.wolkowycki.predictable.R;
-import com.wolkowycki.predictable.Store;
+import com.wolkowycki.predictable.utils.Store;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -43,6 +40,7 @@ public class BuyFragment extends Fragment {
 
     private String currency = Constants.CURRENCIES[0];
     private float balance;
+    private float balanceAfterTx;
     private float quantity = 0.0f;
     private float cost = 0.0f;
     private String userId = "123456";
@@ -76,6 +74,14 @@ public class BuyFragment extends Fragment {
         this.balance = balance;
     }
 
+    public float getBalanceAfterTx() {
+        return balanceAfterTx;
+    }
+
+    public void setBalanceAfterTx(float balanceAfterTx) {
+        this.balanceAfterTx = balanceAfterTx;
+    }
+
     public float getCost() {
         return cost;
     }
@@ -100,20 +106,6 @@ public class BuyFragment extends Fragment {
         return fragment;
     }
 
-    // Key is "balance"
-    private void saveBalance(Activity root, String key, float balance) {
-        SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putFloat(key, balance);
-        editor.apply();
-    }
-
-    // Key is "balance"
-    public float loadBalance(Activity root, String key) {
-        SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
-        return prefs.getFloat(key, 100.0f);
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_buy, container, false);
@@ -133,7 +125,7 @@ public class BuyFragment extends Fragment {
 //        costView = (TextView) root.findViewById(R.id.cost_view);
 
 //        balanceView = (TextView) root.findViewById(R.id.balance);
-        setBalance(loadBalance(requireActivity(), KEY));
+        setBalance(LocalStore.loadBalance(requireActivity(), KEY));
         String balanceTxt = "Wallet balance: " + getBalance() + " $";
 //        balanceView.setText(balanceTxt);
 //
@@ -147,7 +139,7 @@ public class BuyFragment extends Fragment {
                 setCost(tempCost);
 
                 String tempCurrency = getCurrency();
-                float pricePerDollar = store.loadPrice(requireActivity(), tempCurrency);
+                float pricePerDollar = LocalStore.loadPrice(requireActivity(), tempCurrency);
                 float tempQuantity = tempCost / pricePerDollar;
                 setQuantity(tempQuantity);
 
@@ -163,7 +155,8 @@ public class BuyFragment extends Fragment {
                 String costTxt = getCost() + " $";
                 // costView.setText(costTxt);
 
-                float balanceAfterTx = getBalance() - getCost();
+                float newBalance = getBalance() - getCost();
+                setBalanceAfterTx(newBalance);
                 String balanceAfterTxTxt = "Wallet balance after transaction: " + balanceAfterTx + " $";
                 // balanceAfterTxView.setText(balanceAfterTxTxt);
             }
@@ -208,8 +201,6 @@ public class BuyFragment extends Fragment {
 //        wheel.addScrollingListener(scrolledListener);
         wheel.setInterpolator(new AnticipateOvershootInterpolator());
 
-        final Store store = new Store(requireActivity());
-
         wheel.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(WheelView wheel) {
@@ -248,6 +239,8 @@ public class BuyFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        LocalStore.saveBalance(requireActivity(), "balance", getBalanceAfterTx());
+
                         BuySuccessDialog dialog = new BuySuccessDialog();
                         dialog.show(requireActivity().getSupportFragmentManager(), "");
                     }

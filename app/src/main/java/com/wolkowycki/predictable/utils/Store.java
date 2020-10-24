@@ -1,8 +1,6 @@
-package com.wolkowycki.predictable;
+package com.wolkowycki.predictable.utils;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,32 +14,10 @@ import org.json.JSONObject;
 
 public class Store {
     private static final String CG = "https://api.coingecko.com/api/v3";
-    private static final String API = "https://predictable-api.herokuapp.com";
     private RequestQueue queue;
 
     public Store(Activity root) {
         queue = Volley.newRequestQueue(root);
-    }
-
-    // Key is currencyKey
-    // It can be a currency, e.g. "bitcoin" to store fresh prices
-    // A concatenated currency + date, e.g. "bitcoin&date=01-07-2020" to store past
-    // Or a concatenated currency + nDaysForward, e.g. "bitcoin&nDaysForward=1" to store predicted
-    private void savePrice(Activity root, String currencyKey, float price) {
-        SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putFloat(currencyKey, price);
-        editor.apply();
-    }
-
-    // Analogical to above
-    // Key is currencyKey
-    // It can be a currency, e.g. "bitcoin" to store fresh prices
-    // A concatenated currency + date, e.g. "bitcoin&date=01-07-2020" to store past
-    // Or a concatenated currency + nDaysForward, e.g. "bitcoin&nDaysForward=1" to store predicted
-    public float loadPrice(Activity root, String currencyKey) {
-        SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
-        return prefs.getFloat(currencyKey, 0.0f);
     }
 
     public void fetchFreshPrice(final Activity root,
@@ -57,7 +33,7 @@ public class Store {
                         try {
                             JSONObject jsonObject = response.getJSONObject(currency);
                             float price = (float) jsonObject.getDouble(vsCurrency);
-                            savePrice(root, currency, price);
+                            LocalStore.savePrice(root, currency, price);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -86,7 +62,7 @@ public class Store {
                             JSONObject marketData = response.getJSONObject("market_data");
                             JSONObject currentPrice = marketData.getJSONObject("current_price");
                             float price = (float) currentPrice.getDouble(vsCurrency);
-                            savePrice(root, currency + "&date=" + date, price);
+                            LocalStore.savePrice(root, currency + "&date=" + date, price);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -104,7 +80,7 @@ public class Store {
                                  final String currency,
                                  final int nDaysForward) {
 
-        String url = API + "/future-prices/" + currency + "&" + nDaysForward;
+        String url = Constants.API + "/future-prices/" + currency + "&" + nDaysForward;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -112,7 +88,7 @@ public class Store {
                     public void onResponse(JSONObject response) {
                         try {
                             float price = (float) response.getDouble("value");
-                            savePrice(root, currency + "&nDaysForward=" + nDaysForward, price);
+                            LocalStore.savePrice(root, currency + "&nDaysForward=" + nDaysForward, price);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

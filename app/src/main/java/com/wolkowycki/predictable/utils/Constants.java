@@ -1,4 +1,4 @@
-package com.wolkowycki.predictable;
+package com.wolkowycki.predictable.utils;
 
 public class Constants {
 
