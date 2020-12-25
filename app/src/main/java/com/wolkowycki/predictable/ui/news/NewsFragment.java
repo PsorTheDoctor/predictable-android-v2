@@ -79,10 +79,11 @@ public class NewsFragment extends Fragment {
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject entry = response.getJSONObject(i);
                         String header = entry.getString("header");
+                        String publisher = entry.getString("publisher");
                         String link = entry.getString("link");
                         String date = entry.getString("date");
 
-                        newsList.add(new NewsItem(header, link, date));
+                        newsList.add(new NewsItem(header, publisher, link, date));
                     }
                     newsAdapter = new NewsAdapter(getContext(), newsList);
                     newsRecycler.setAdapter(newsAdapter);

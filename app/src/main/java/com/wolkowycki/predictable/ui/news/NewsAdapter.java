@@ -2,6 +2,7 @@ package com.wolkowycki.predictable.ui.news;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +39,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         NewsItem currentItem = newsList.get(position);
 
         final String header = currentItem.getHeader();
+        final String publisher = currentItem.getPublisher();
         final String link = currentItem.getLink();
         final String date = currentItem.getDate();
         final String formattedDate = date.substring(0, 22);
+        final int color = currentItem.getColor();
+
+        holder.textViewPublisher.setText(publisher);
+        holder.textViewPublisher.setBackgroundColor(color);
+        if (color != Color.parseColor("#e0e0e0")) {
+            holder.textViewPublisher.setTextColor(Color.parseColor("#ffffff"));
+        }
 
         holder.textViewHeader.setText(header);
         holder.textViewDate.setText(formattedDate);
@@ -61,13 +70,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textViewHeader;
-        public Button btnLink;
-        public TextView textViewDate;
+        private TextView textViewHeader;
+        private TextView textViewPublisher;
+        private Button btnLink;
+        private TextView textViewDate;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textViewHeader = itemView.findViewById(R.id.news_header);
+            this.textViewPublisher = itemView.findViewById(R.id.news_publisher);
             this.btnLink = itemView.findViewById(R.id.news_link);
             this.textViewDate = itemView.findViewById(R.id.news_date);
         }
