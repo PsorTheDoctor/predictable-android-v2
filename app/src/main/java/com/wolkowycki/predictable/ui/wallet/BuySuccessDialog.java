@@ -19,8 +19,6 @@ public class BuySuccessDialog extends AppCompatDialogFragment {
         View v = inflater.inflate(R.layout.dialog_success, null);
         builder.setView(v);
 
-
-
         return builder.create();
     }
 }

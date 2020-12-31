@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,7 +18,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.R;
+import com.wolkowycki.predictable.utils.Constants;
 import com.wolkowycki.predictable.utils.LocalStore;
+import com.wolkowycki.predictable.utils.Store;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +45,7 @@ public class NewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
+        Store store = new Store(requireActivity());
 
         tagsRecycler = root.findViewById(R.id.tags_view);
 
@@ -58,7 +60,7 @@ public class NewsFragment extends Fragment {
             tagItems.add(item);
         }
 
-        tagsAdapter = new TagsAdapter(root.getContext(), tagItems);
+        tagsAdapter = new TagsAdapter(root.getContext(), tagItems, store);
         tagsRecycler.setAdapter(tagsAdapter);
 
         newsRecycler = root.findViewById(R.id.news_view);
@@ -81,7 +83,7 @@ public class NewsFragment extends Fragment {
     }
 
     private void parseJson(int numOfNews) {
-        String url = "https://predictable-api.herokuapp.com/entries-list/" + String.valueOf(numOfNews);
+        String url = Constants.API + "/entries-list/" + String.valueOf(numOfNews);
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
             @Override
