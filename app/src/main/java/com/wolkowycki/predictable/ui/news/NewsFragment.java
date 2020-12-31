@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.R;
+import com.wolkowycki.predictable.utils.LocalStore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 public class NewsFragment extends Fragment {
 
     private static final String[] TAGS = {
-            "Forbes", "TechCrunch", "CoinDesk", "Cointelegraph"
+            "Forbes", "TechCrunch", "Reuters", "Guardian"
     };
 
     private RecyclerView tagsRecycler;
@@ -65,12 +66,21 @@ public class NewsFragment extends Fragment {
 
         newsList = new ArrayList<>();
         queue = Volley.newRequestQueue(root.getContext());
-        parseJson();
+
+        int numOfNews = 10;
+//        if (LocalStore.containsNews(requireActivity(), "news&idx=0&value=header")) {
+//            loadNews(numOfNews);
+//        } else {
+//            removeNews(numOfNews);
+//            parseJson(numOfNews);
+//        }
+        removeNews(numOfNews);
+        parseJson(numOfNews);
         return root;
     }
 
-    private void parseJson() {
-        String url = "https://predictable-api.herokuapp.com/entries-list/10";
+    private void parseJson(int numOfNews) {
+        String url = "https://predictable-api.herokuapp.com/entries-list/" + String.valueOf(numOfNews);
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
             @Override
@@ -80,11 +90,22 @@ public class NewsFragment extends Fragment {
                         JSONObject entry = response.getJSONObject(i);
                         String header = entry.getString("header");
                         String publisher = entry.getString("publisher");
+                        String content = entry.getString("content");
                         String link = entry.getString("link");
-                        String date = entry.getString("date");
+                        String date = entry.getString("n_days_ago");
+                        String img = entry.getString("img");
 
-                        newsList.add(new NewsItem(header, publisher, link, date));
+                        newsList.add(new NewsItem(header, publisher, content, link, date, img));
+
+                        String idx = String.valueOf(i);
+                        LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=header", header);
+                        LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=publisher", publisher);
+                        LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=content", content);
+                        LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=link", link);
+                        LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=date", date);
+                        LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=img", img);
                     }
+
                     newsAdapter = new NewsAdapter(getContext(), newsList);
                     newsRecycler.setAdapter(newsAdapter);
                 } catch (JSONException e) {
@@ -98,5 +119,33 @@ public class NewsFragment extends Fragment {
             }
         });
         queue.add(request);
+    }
+
+    private void loadNews(int numOfNews) {
+        for (int i = 0; i < numOfNews; i++) {
+            String idx = String.valueOf(i);
+            String header = LocalStore.loadNews(requireActivity(), "news%idx=" + idx + "&value=header");
+            String publisher = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=publisher");
+            String content = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=content");
+            String link = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=link");
+            String date = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=date");
+            String img = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=img");
+
+            newsList.add(new NewsItem(header, publisher, content, link, date, img));
+        }
+        newsAdapter = new NewsAdapter(getContext(), newsList);
+        newsRecycler.setAdapter(newsAdapter);
+    }
+
+    private void removeNews(int numOfNews) {
+        for (int i = 0; i < numOfNews; i++) {
+            String idx = String.valueOf(i);
+            LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=header");
+            LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=publisher");
+            LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=content");
+            LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=link");
+            LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=date");
+            LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=img");
+        }
     }
 }

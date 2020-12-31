@@ -22,14 +22,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingLeft="8dp"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:fontFamily="@font/century_gothic_bold" />
 
         <TextView
             android:id="@+id/fresh_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:fontFamily="@font/century_gothic"
             android:textAlignment="textEnd" />
     </TableRow>

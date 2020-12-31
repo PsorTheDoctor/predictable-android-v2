@@ -2,16 +2,22 @@ package com.wolkowycki.predictable.ui.news;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+// import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wolkowycki.predictable.R;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -40,19 +46,26 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         final String header = currentItem.getHeader();
         final String publisher = currentItem.getPublisher();
+        final String content = currentItem.getContent();
         final String link = currentItem.getLink();
         final String date = currentItem.getDate();
-        final String formattedDate = date.substring(0, 22);
-        final int color = currentItem.getColor();
+        final String base64 = currentItem.getImg();
+//        final String formattedDate = date.substring(0, 22);
+//        final int color = currentItem.getColor();
 
         holder.textViewPublisher.setText(publisher);
-        holder.textViewPublisher.setBackgroundColor(color);
-        if (color != Color.parseColor("#e0e0e0")) {
-            holder.textViewPublisher.setTextColor(Color.parseColor("#ffffff"));
-        }
+//        holder.textViewPublisher.setBackgroundColor(color);
+//        if (color != Color.parseColor("#e0e0e0")) {
+//            holder.textViewPublisher.setTextColor(Color.parseColor("#ffffff"));
+//        }
 
         holder.textViewHeader.setText(header);
-        holder.textViewDate.setText(formattedDate);
+        holder.textViewContent.setText(content);
+        holder.textViewDate.setText(date);
+
+//        byte[] decodedStr = Base64.decode(base64.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
+//        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedStr, 0, decodedStr.length);
+//        holder.imgView.setImageBitmap(decodedByte);
 
         holder.btnLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,15 +85,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         private TextView textViewHeader;
         private TextView textViewPublisher;
+        private TextView textViewContent;
         private Button btnLink;
         private TextView textViewDate;
+        private ImageView imgView;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textViewHeader = itemView.findViewById(R.id.news_header);
             this.textViewPublisher = itemView.findViewById(R.id.news_publisher);
+            this.textViewContent = itemView.findViewById(R.id.news_content);
             this.btnLink = itemView.findViewById(R.id.news_link);
             this.textViewDate = itemView.findViewById(R.id.news_date);
+            this.imgView = itemView.findViewById(R.id.news_img);
         }
     }
 }
