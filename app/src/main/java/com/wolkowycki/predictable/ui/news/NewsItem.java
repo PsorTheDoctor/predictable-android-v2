@@ -6,16 +6,18 @@ public class NewsItem {
     private String header;
     private String publisher;
     private String content;
+    private String fullArticle;
     private String link;
     private String date;
     private String img;
     // private int color;
 
     public NewsItem(String header, String publisher, String content,
-                    String link, String date, String img) {
+                    String fullArticle, String link, String date, String img) {
         this.header = header;
         this.publisher = publisher;
         this.content = content;
+        this.fullArticle = fullArticle;
         this.link = link;
         this.date = date;
         this.img = img;
@@ -58,6 +60,10 @@ public class NewsItem {
 
     public String getContent() {
         return content;
+    }
+
+    public String getFullArticle() {
+        return fullArticle;
     }
 
     public String getLink() {

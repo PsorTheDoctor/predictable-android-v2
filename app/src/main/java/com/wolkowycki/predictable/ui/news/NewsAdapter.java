@@ -22,6 +22,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private Context context;
     private ArrayList<NewsItem> newsList;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public NewsAdapter(Context context, ArrayList<NewsItem> newsList) {
         this.context = context;
@@ -62,13 +71,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 //        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedStr, 0, decodedStr.length);
 //        holder.imgView.setImageBitmap(decodedByte);
 
-        holder.btnLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                context.startActivity(browser);
-            }
-        });
+//        holder.btnLink.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+//                context.startActivity(browser);
+//            }
+//        });
     }
 
     @Override
@@ -90,9 +99,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             this.textViewHeader = itemView.findViewById(R.id.news_header);
             this.textViewPublisher = itemView.findViewById(R.id.news_publisher);
             this.textViewContent = itemView.findViewById(R.id.news_content);
-            this.btnLink = itemView.findViewById(R.id.news_link);
+            // this.btnLink = itemView.findViewById(R.id.news_link);
             this.textViewDate = itemView.findViewById(R.id.news_date);
             this.imgView = itemView.findViewById(R.id.news_img);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

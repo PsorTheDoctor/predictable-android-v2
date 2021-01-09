@@ -1,5 +1,6 @@
 package com.wolkowycki.predictable.ui.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +29,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickListener {
 
     private static final String[] TAGS = {
-            "Forbes", "TechCrunch", "Reuters", "Guardian"
+            "Blockchain", "Finance", "Real Estate", "Technology", "Stocks"
     };
+
+    public static final String HEADER = "header";
+    public static final String ARTICLE = "article";
 
     private RecyclerView tagsRecycler;
     private TagsAdapter tagsAdapter;
@@ -94,11 +98,12 @@ public class NewsFragment extends Fragment {
                         String header = entry.getString("header");
                         String publisher = entry.getString("publisher");
                         String content = entry.getString("content");
+                        String fullArticle = "";
                         String link = entry.getString("link");
                         String date = entry.getString("n_days_ago");
                         String img = entry.getString("img");
 
-                        newsList.add(new NewsItem(header, publisher, content, link, date, img));
+                        newsList.add(new NewsItem(header, publisher, content, fullArticle, link, date, img));
 
                         String idx = String.valueOf(i);
                         LocalStore.saveNews(requireActivity(), "news&idx=" + idx + "&value=header", header);
@@ -111,6 +116,7 @@ public class NewsFragment extends Fragment {
 
                     newsAdapter = new NewsAdapter(getContext(), newsList);
                     newsRecycler.setAdapter(newsAdapter);
+                    newsAdapter.setOnItemClickListener(NewsFragment.this);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -130,11 +136,12 @@ public class NewsFragment extends Fragment {
             String header = LocalStore.loadNews(requireActivity(), "news%idx=" + idx + "&value=header");
             String publisher = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=publisher");
             String content = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=content");
+            String fullArticle = "";
             String link = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=link");
             String date = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=date");
             String img = LocalStore.loadNews(requireActivity(), "news&idx=" + idx + "&value=img");
 
-            newsList.add(new NewsItem(header, publisher, content, link, date, img));
+            newsList.add(new NewsItem(header, publisher, content, fullArticle, link, date, img));
         }
         newsAdapter = new NewsAdapter(getContext(), newsList);
         newsRecycler.setAdapter(newsAdapter);
@@ -150,5 +157,15 @@ public class NewsFragment extends Fragment {
             LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=date");
             LocalStore.removeNews(requireActivity(), "news&idx=" + idx + "&value=img");
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent entryIntent = new Intent(getContext(), EntryActivity.class);
+        NewsItem clickedItem = newsList.get(position);
+
+        entryIntent.putExtra(HEADER, clickedItem.getHeader());
+        entryIntent.putExtra(ARTICLE, clickedItem.getFullArticle());
+        startActivity(entryIntent);
     }
 }

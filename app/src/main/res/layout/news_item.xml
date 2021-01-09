@@ -56,16 +56,16 @@
             android:textSize="16sp"
             android:fontFamily="@font/century_gothic" />
 
-        <Button
-            android:id="@+id/news_link"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:paddingHorizontal="8dp"
-            android:text="Read more"
-            android:textAllCaps="false"
-            android:background="@drawable/shape_pill"
-            android:fontFamily="@font/century_gothic" />
+<!--        <Button-->
+<!--            android:id="@+id/news_link"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="28dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            android:paddingHorizontal="8dp"-->
+<!--            android:text="Read more"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:background="@drawable/shape_pill"-->
+<!--            android:fontFamily="@font/century_gothic" />-->
     </LinearLayout>
 </androidx.cardview.widget.CardView>
