@@ -40,7 +40,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
         holder.tagBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                store.postQuery(tags.get(position).getTagName());
+                store.setQuery(tags.get(position).getTagName());
             }
         });
     }

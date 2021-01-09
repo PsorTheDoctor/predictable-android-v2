@@ -1,26 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.news.EntryActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/entry_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:paddingHorizontal="16dp"
-        android:textSize="20sp"
-        android:fontFamily="@font/century_gothic" />
+        <TextView
+            android:id="@+id/entry_publisher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="4dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="18sp"
+            android:background="#e0e0e0"
+            android:fontFamily="@font/century_gothic" />
 
-    <TextView
-        android:id="@+id/entry_article"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="16sp"
-        android:fontFamily="@font/century_gothic" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/entry_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry_publisher"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:fontFamily="@font/century_gothic" />
+
+        <TextView
+            android:id="@+id/entry_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry_date"
+            android:layout_marginBottom="8dp"
+            android:paddingHorizontal="16dp"
+            android:textSize="24sp"
+            android:fontFamily="@font/century_gothic" />
+
+        <TextView
+            android:id="@+id/entry_article"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry_header"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:fontFamily="@font/century_gothic" />
+    </RelativeLayout>
+</ScrollView>

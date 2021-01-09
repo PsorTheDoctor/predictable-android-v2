@@ -64,4 +64,19 @@ public class LocalStore {
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(key).apply();
     }
+
+    // Key is "article&idx=..." where
+    // idx is an index of an entry
+    // For example: "article&idx=0"
+    public static void saveArticle(Activity root, String key, String value) {
+        SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(key, value).apply();
+    }
+
+    // Analogical to above
+    public static String loadArticle(Activity root, String key) {
+        SharedPreferences prefs = root.getPreferences(Context.MODE_PRIVATE);
+        return prefs.getString(key, "Sth went wrong. Refresh an app and try again");
+    }
 }
