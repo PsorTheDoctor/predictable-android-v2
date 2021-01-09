@@ -1,12 +1,9 @@
 package com.wolkowycki.predictable.ui.news;
 
 import android.content.Context;
-// import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wolkowycki.predictable.R;
@@ -49,18 +46,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         final String header = currentItem.getHeader();
         final String publisher = currentItem.getPublisher();
         final String content = currentItem.getContent();
-        final String link = currentItem.getLink();
+        // final String link = currentItem.getLink();
         final String date = currentItem.getDate();
-        final String base64 = currentItem.getImg();
+        // final String base64 = currentItem.getImg();
 //        final String formattedDate = date.substring(0, 22);
-//        final int color = currentItem.getColor();
+        final int color = currentItem.getColor();
 
         holder.textViewPublisher.setText(publisher);
-//        holder.textViewPublisher.setBackgroundColor(color);
-//        if (color != Color.parseColor("#e0e0e0")) {
-//            holder.textViewPublisher.setTextColor(Color.parseColor("#ffffff"));
-//        }
-
+        holder.textViewPublisher.setBackgroundColor(color);
         holder.textViewHeader.setText(header);
         holder.textViewContent.setText(content);
         holder.textViewDate.setText(date);
@@ -88,9 +81,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         private TextView textViewHeader;
         private TextView textViewPublisher;
         private TextView textViewContent;
-        private Button btnLink;
+        // private Button btnLink;
         private TextView textViewDate;
-        private ImageView imgView;
+        // private ImageView imgView;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,7 +92,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             this.textViewContent = itemView.findViewById(R.id.news_content);
             // this.btnLink = itemView.findViewById(R.id.news_link);
             this.textViewDate = itemView.findViewById(R.id.news_date);
-            this.imgView = itemView.findViewById(R.id.news_img);
+            // this.imgView = itemView.findViewById(R.id.news_img);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

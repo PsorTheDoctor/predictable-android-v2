@@ -20,7 +20,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.wolkowycki.predictable.R;
 import com.wolkowycki.predictable.utils.Constants;
-// import com.wolkowycki.predictable.utils.LocalStore;
 import com.wolkowycki.predictable.utils.Store;
 
 import org.json.JSONArray;
@@ -39,6 +38,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
     public static final String HEADER = "header";
     public static final String PUBLISHER = "publisher";
     public static final String DATE = "date";
+    public static final String COLOR = "color";
 
     private RecyclerView tagsRecycler;
     private TagsAdapter tagsAdapter;
@@ -171,6 +171,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
         entryIntent.putExtra(HEADER, clickedItem.getHeader());
         entryIntent.putExtra(PUBLISHER, clickedItem.getPublisher());
         entryIntent.putExtra(DATE, clickedItem.getDate());
+        entryIntent.putExtra(COLOR, clickedItem.getColor());
         startActivity(entryIntent);
     }
 }

@@ -1,6 +1,8 @@
 package com.wolkowycki.predictable.ui.news;
 
-// import android.graphics.Color;
+import android.graphics.Color;
+
+import java.util.Random;
 
 public class NewsItem {
     private String header;
@@ -10,7 +12,7 @@ public class NewsItem {
     private String link;
     private String date;
     private String img;
-    // private int color;
+    private int color;
 
     public NewsItem(String header, String publisher, String content,
                     String fullArticle, String link, String date, String img) {
@@ -21,6 +23,7 @@ public class NewsItem {
         this.link = link;
         this.date = date;
         this.img = img;
+        color = getRandomColor();
 
 //        switch (publisher) {
 //            case "Forbes":
@@ -78,7 +81,12 @@ public class NewsItem {
         return img;
     }
 
-//    public int getColor() {
-//        return color;
-//    }
+    public int getColor() {
+        return color;
+    }
+
+    private int getRandomColor() {
+        Random r = new Random();
+        return Color.argb(255, r.nextInt(128), r.nextInt(128), r.nextInt(128));
+    }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.wolkowycki.predictable.utils.LocalStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.wolkowycki.predictable.ui.news.NewsFragment.COLOR;
 import static com.wolkowycki.predictable.ui.news.NewsFragment.DATE;
 import static com.wolkowycki.predictable.ui.news.NewsFragment.HEADER;
 import static com.wolkowycki.predictable.ui.news.NewsFragment.IDX;
@@ -28,8 +30,7 @@ import static com.wolkowycki.predictable.ui.news.NewsFragment.PUBLISHER;
 public class EntryActivity extends AppCompatActivity {
 
     private RequestQueue queue;
-    // private LocalStore localStore;
-    private String article = "sth";
+    private String article;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,13 @@ public class EntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_entry);
 
         queue = Volley.newRequestQueue(this);
-        // localStore = new LocalStore();
 
         Intent intent = getIntent();
         int idx = intent.getIntExtra(IDX, 0);
         String header = intent.getStringExtra(HEADER);
         String publisher = intent.getStringExtra(PUBLISHER);
         String date = intent.getStringExtra(DATE);
+        int color = intent.getIntExtra(COLOR, Color.parseColor("#000000"));
 
         TextView headerView = findViewById(R.id.entry_header);
         TextView articleView = findViewById(R.id.entry_article);
@@ -52,6 +53,7 @@ public class EntryActivity extends AppCompatActivity {
 
         headerView.setText(header);
         publisherView.setText(publisher);
+        publisherView.setBackgroundColor(color);
         dateView.setText(date);
 
         parseArticle(this, idx);
@@ -59,14 +61,6 @@ public class EntryActivity extends AppCompatActivity {
         article = LocalStore.loadArticle(this, "article&idx=" + idx);
         articleView.setText(article);
     }
-
-//    private String getArticle() {
-//        return article;
-//    }
-//
-//    private void setArticle(String article) {
-//        this.article = article;
-//    }
 
     private void parseArticle(final Activity root, final int idx) {
         String url = Constants.API + "/entries-full/" + idx;
@@ -76,7 +70,6 @@ public class EntryActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             String article = response.getString("article");
-                            // setArticle(article);
                             LocalStore.saveArticle(root, "article&idx=" + idx, article);
                         } catch (JSONException e) {
                             e.printStackTrace();

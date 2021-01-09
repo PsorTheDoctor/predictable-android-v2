@@ -19,7 +19,7 @@
             android:paddingVertical="4dp"
             android:layout_marginBottom="4dp"
             android:textSize="18sp"
-            android:background="#e0e0e0"
+            android:textColor="#ffffff"
             android:fontFamily="@font/century_gothic" />
 
         <TextView
@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:layout_marginBottom="8dp"
+            android:textSize="16sp"
             android:fontFamily="@font/century_gothic" />
 
         <TextView
