@@ -1,6 +1,7 @@
 package com.wolkowycki.predictable.ui.wallet;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class BuyFragment extends Fragment {
 
     private String currency = Constants.CURRENCIES[0];
     private float balance;
+    private String balanceTxt;
     private float balanceAfterTx;
     private float quantity = 0.0f;
     private float cost = 0.0f;
@@ -47,7 +49,9 @@ public class BuyFragment extends Fragment {
 
     private boolean wheelScrolled = false;
     // private EditText currencyEdit;
+    private TextView balanceView;
     private TextView tempCostView;
+    private TextView tempCost2View;
     private SeekBar seekBar;
 
 //    private TextView currencyView;
@@ -118,20 +122,22 @@ public class BuyFragment extends Fragment {
         initWheel(root);
         // currencyEdit = (EditText) root.findViewById(R.id.currency_edit);
 
-        tempCostView = (TextView) root.findViewById(R.id.temp_cost);
+        balanceView = root.findViewById(R.id.balance);
+        tempCostView = root.findViewById(R.id.temp_cost);
+        tempCost2View = root.findViewById(R.id.temp_cost2);
 
 //        currencyView = (TextView) root.findViewById(R.id.currency_view);
 //        quantityView = (TextView) root.findViewById(R.id.quantity_view);
 //        costView = (TextView) root.findViewById(R.id.cost_view);
 
 //        balanceView = (TextView) root.findViewById(R.id.balance);
-        setBalance(LocalStore.loadBalance(requireActivity(), KEY));
-        String balanceTxt = "Wallet balance: " + getBalance() + " $";
-//        balanceView.setText(balanceTxt);
+        setBalance(Math.round(100 * LocalStore.loadBalance(requireActivity(), KEY)) / 100.0f);
+        balanceTxt = "Wallet balance: " + getBalance() + " $";
+        balanceView.setText(balanceTxt);
 //
 //        balanceAfterTxView = (TextView) root.findViewById(R.id.balance_after_tx);
 
-        seekBar = (SeekBar) root.findViewById(R.id.seekbar);
+        seekBar = root.findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
@@ -143,8 +149,11 @@ public class BuyFragment extends Fragment {
                 float tempQuantity = tempCost / pricePerDollar;
                 setQuantity(tempQuantity);
 
-                String tempCostTxt = tempCost + " $ = " + tempQuantity + " (" + tempCurrency + ")";
+                String tempCostTxt = tempCost + " $ =";
+                String tempCost2Txt = "= " + tempQuantity + " (" + tempCurrency + ")";
+
                 tempCostView.setText(tempCostTxt);
+                tempCost2View.setText(tempCost2Txt);
             }
 
             @Override
@@ -162,7 +171,7 @@ public class BuyFragment extends Fragment {
             }
         });
 
-        buyBtn = (Button) root.findViewById(R.id.btn_wallet);
+        buyBtn = root.findViewById(R.id.btn_wallet);
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,6 +179,15 @@ public class BuyFragment extends Fragment {
                 // saveBalance(requireActivity(), KEY, newBalance);
                 if (currency != null && quantity != 0.0f) {
                     postOrder();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setBalance(Math.round(100 * LocalStore.loadBalance(requireActivity(), KEY)) / 100.0f);
+                            balanceTxt = "Wallet balance: " + getBalance() + " $";
+                            balanceView.setText(balanceTxt);
+                        }
+                    }, 100);
                 } else {
                     BuyErrorDialog dialog = new BuyErrorDialog();
                     dialog.show(requireActivity().getSupportFragmentManager(), "");

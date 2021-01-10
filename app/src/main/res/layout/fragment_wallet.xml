@@ -40,13 +40,13 @@
                 app:tabIndicatorFullWidth="false" />
         </androidx.viewpager.widget.ViewPager>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_wallet" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:src="@drawable/ic_wallet" />-->
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

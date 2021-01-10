@@ -38,26 +38,26 @@ public class WalletFragment extends Fragment {
         tabs.setupWithViewPager(pager);
 
         coordinatorLayout = root.findViewById(R.id.coordinator);
-        fab = root.findViewById(R.id.fab);
-        fabAnim = AnimationUtils.loadAnimation(root.getContext(), R.anim.fab_animation);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSnackbar();
-            }
-        });
+//        fab = root.findViewById(R.id.fab);
+//        fabAnim = AnimationUtils.loadAnimation(root.getContext(), R.anim.fab_animation);
+//
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showSnackbar();
+//            }
+//        });
         return root;
     }
 
-    private void showSnackbar() {
-        float balance = LocalStore.loadBalance(requireActivity(), "balance");
-
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Wallet balance: " + balance + " $",
-                Snackbar.LENGTH_SHORT);
-        // View snackView = snackbar.getView();
-        // TextView snackTxt = snackView.findViewById(R.id.snackbar_text);
-        snackbar.show();
-        fab.startAnimation(fabAnim);
-    }
+//    private void showSnackbar() {
+//        float balance = LocalStore.loadBalance(requireActivity(), "balance");
+//
+//        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Wallet balance: " + balance + " $",
+//                Snackbar.LENGTH_SHORT);
+//        // View snackView = snackbar.getView();
+//        // TextView snackTxt = snackView.findViewById(R.id.snackbar_text);
+//        snackbar.show();
+//        fab.startAnimation(fabAnim);
+//    }
 }
